@@ -1,22 +1,28 @@
 const fs = require("fs");
-const app = (req, res) => {
-  let filePath = req.url;
+const ROOT = "./pages";
+const HOME = "/index.html";
 
-  if (req.url == "/") {
-    filePath = "/pages/index.html";
+const getFilePath = function(url) {
+  if (url == "/") {
+    return ROOT + HOME;
   }
+  return ROOT + url;
+};
 
-  fs.stat("." + filePath, function(err, stats) {
-    if (err != null) {
-      res.statusCode = 404;
-      res.end();
+const send = function(res, statusCode, content) {
+  res.statusCode = statusCode;
+  res.write(content);
+  res.end();
+};
+
+const app = (req, res) => {
+  const filePath = getFilePath(req.url);
+  fs.readFile(filePath, function(err, data) {
+    if (err) {
+      send(res, 404, "");
       return 1;
     }
-    fs.readFile("." + filePath, function(err, data) {
-      res.statusCode = 202;
-      res.write(data);
-      res.end();
-    });
+    send(res, 200, data);
   });
 };
 
