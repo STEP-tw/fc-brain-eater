@@ -3,3 +3,13 @@ header h1 {
   text-align: right;
   margin: 20px 150px;
 }
+header {
+  border-bottom: 1px solid black;
+  margin-bottom: 10px;
+}
+nav {
+  margin: auto 10px;
+}
+main {
+  display: flex;
+}
