@@ -2,8 +2,7 @@ const fs = require("fs");
 const send = require("./send");
 const parse = require("./parse");
 
-const writeToComments = function(comments, newComment, res) {
-  comments.push(newComment);
+const writeComments = function(comments, res) {
   let json = JSON.stringify(comments);
   fs.writeFile("./src/comments.json", json, function(err) {
     if (err) {
@@ -24,7 +23,8 @@ const saveComments = function(req, res, args) {
       send(res, 501, "");
     }
     let comments = JSON.parse(data);
-    writeToComments(comments, commentObj, res);
+    comments.push(commentObj);
+    writeComments(comments, res);
   });
 };
 
