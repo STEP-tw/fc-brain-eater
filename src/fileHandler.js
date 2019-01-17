@@ -10,7 +10,7 @@ const getFilePath = function(url) {
   return ROOT + url;
 };
 
-const fileHandler = function(req, res, next) {
+const fileHandler = function(req, res) {
   const filePath = getFilePath(req.url);
   fs.readFile(filePath, function(err, data) {
     if (err) {
