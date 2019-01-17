@@ -10,11 +10,11 @@ const getFilePath = function(url) {
   return ROOT + url;
 };
 
-const fileHandler = function(req, res) {
+const fileHandler = function(req, res, next) {
   const filePath = getFilePath(req.url);
   fs.readFile(filePath, function(err, data) {
     if (err) {
-      send(res, 404, "");
+      send(res, 404, "File not found");
       return 1;
     }
     send(res, 200, data);

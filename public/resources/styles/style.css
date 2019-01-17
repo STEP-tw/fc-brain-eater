@@ -13,3 +13,7 @@ nav {
 main {
   display: flex;
 }
+form {
+  border-bottom: 1px solid;
+  padding: 10px;
+}

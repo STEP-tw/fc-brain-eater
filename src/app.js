@@ -1,20 +1,16 @@
-const saveComments = require("./saveCommentsHandler");
+const addComments = require("./saveCommentsHandler");
 const fileHandler = require("./fileHandler");
+const Sheeghra = require("./shegra");
+const app = new Sheeghra();
 
-const requestHandlers = {
-  "/Guest_book.html": saveComments
+const logRequestUrl = function(req, res, next) {
+  console.log(req.url);
+  next();
 };
 
-const app = (req, res) => {
-  let [fileName, args] = req.url.split("?");
-  if (!args) {
-    fileHandler(req, res);
-    return 0;
-  }
-  let handler = requestHandlers[fileName];
-  handler(req, res, args);
-};
+app.use(logRequestUrl);
+app.post("/Guest_book.html", addComments);
+app.use(fileHandler);
 
-// Export a function that can act as a handler
-
-module.exports = app;
+app.post("/");
+module.exports = app.handleRequest.bind(app);
