@@ -1,30 +1,18 @@
-const fs = require("fs");
-const ROOT = "./public";
-const HOME = "/index.html";
+const saveComments = require("./saveCommentsHandler");
+const fileHandler = require("./fileHandler");
 
-const getFilePath = function(url) {
-  if (url == "/") {
-    return ROOT + HOME;
-  }
-  return ROOT + url;
-};
-
-const send = function(res, statusCode, content) {
-  res.statusCode = statusCode;
-  res.write(content);
-  res.end();
+const requestHandlers = {
+  "/Guest_book.html": saveComments
 };
 
 const app = (req, res) => {
-  const filePath = getFilePath(req.url);
-
-  fs.readFile(filePath, function(err, data) {
-    if (err) {
-      send(res, 404, "");
-      return 1;
-    }
-    send(res, 200, data);
-  });
+  let [fileName, args] = req.url.split("?");
+  if (!args) {
+    fileHandler(req, res);
+    return 0;
+  }
+  let handler = requestHandlers[fileName];
+  handler(req, res, args);
 };
 
 // Export a function that can act as a handler
