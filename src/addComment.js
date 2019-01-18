@@ -7,7 +7,7 @@ const appendComment = function(res, args) {
   let commentObj = parse(args);
   commentObj.dataTime = new Date().toDateString();
   let json = JSON.stringify(commentObj);
-  fs.appendFile("./src/comments.json", json + ",", function(err, data) {
+  fs.appendFile("./data/comments.json", json + ",", function(err, data) {
     send(res, 200, generateGuestBookPage());
   });
 };

@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 const generateGuestBookPage = function() {
-  let comments = fs.readFileSync("./src/comments.json", "utf8");
+  let comments = fs.readFileSync("./data/comments.json", "utf8");
   comments = comments.slice(0, -1);
   comments = `[${comments}]`;
   let commentsObj = JSON.parse(comments);

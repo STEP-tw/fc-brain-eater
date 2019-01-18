@@ -1,6 +1,6 @@
 header h1 {
   color: orange;
-  text-align: right;
+  text-align: center;
   margin: 20px 150px;
 }
 header {
@@ -27,4 +27,7 @@ td,
 th {
   border: 1px solid black;
   padding: 8px;
+}
+.description {
+  margin-top: 200px;
 }
