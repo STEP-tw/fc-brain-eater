@@ -5,6 +5,8 @@ const fs = require("fs");
 
 const appendComment = function(res, args) {
   let commentObj = parse(args);
+  console.log(commentObj);
+
   commentObj.dataTime = new Date().toDateString();
   let json = JSON.stringify(commentObj);
   fs.appendFile("./src/comments.json", json + ",", function(err, data) {
@@ -16,7 +18,6 @@ const addComment = function(req, res) {
   let args = "";
   req.on("data", chunk => {
     args = args + chunk;
-    console.log(chunk + "chunck");
   });
   req.on("end", function() {
     appendComment(res, args);

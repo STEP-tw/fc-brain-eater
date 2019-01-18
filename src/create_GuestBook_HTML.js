@@ -3,9 +3,7 @@ const fs = require("fs");
 const generateGuestBookPage = function() {
   let comments = fs.readFileSync("./src/comments.json", "utf8");
   comments = comments.slice(0, -1);
-
   comments = `[${comments}]`;
-
   let commentsObj = JSON.parse(comments);
   let tbody = createTableBody(commentsObj);
   let html = `<html>
@@ -42,8 +40,8 @@ const createTableBody = function(comments) {
     .map(
       comment =>
         `<tr><td>${comment.dataTime}</td>
-    <td><p>${comment.name}</p></td>
-    <td><p>${comment.comment}</p></td></tr>`
+    <td><pre>${comment.name}</pre></td>
+    <td><pre>${comment.comment}</pre></td></tr>`
     )
     .join("");
   return `<tbody>${rows}</tbody>`;
