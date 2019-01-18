@@ -16,7 +16,7 @@ const generateGuestBookPage = function() {
       <h1 style="text-align: center"><a href="/index.html"><<</a>Guest Book</h1>
     </header>
     <div class="form">
-    <form method="POST" enctype="text/plain">
+    <form method="POST">
       <legend><h1>Leave a comment</h1></legend>
       <div id="nameInput">
         Name: <input type="text" name="name" id="name" />
@@ -43,6 +43,7 @@ const createTableBody = function(comments) {
     <td><pre>${comment.name}</pre></td>
     <td><pre>${comment.comment}</pre></td></tr>`
     )
+    .reverse()
     .join("");
   return `<tbody>${rows}</tbody>`;
 };
