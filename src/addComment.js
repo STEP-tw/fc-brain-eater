@@ -3,22 +3,24 @@ const parse = require("./parse");
 const generateGuestBookPage = require("./create_GuestBook_HTML");
 const fs = require("fs");
 
-const appendComment = function(res, args) {
-  let commentObj = parse(args);
-  commentObj.dataTime = new Date().toDateString();
-  let json = JSON.stringify(commentObj);
+const appendComment = function(res, json, commentsList) {
   fs.appendFile("./data/comments.json", json + ",", function(err, data) {
-    send(res, 200, generateGuestBookPage());
+    send(res, 200, generateGuestBookPage(commentsList));
   });
 };
 
-const addComment = function(req, res) {
+const addComment = function(comments, req, res) {
   let args = "";
   req.on("data", chunk => {
     args = args + chunk;
   });
   req.on("end", function() {
-    appendComment(res, args);
+    let { commentsList } = comments;
+    let commentObj = parse(args);
+    commentObj.dataTime = new Date().toDateString();
+    commentsList.push(commentObj);
+    let json = JSON.stringify(commentObj);
+    appendComment(res, json, commentsList);
   });
 };
 

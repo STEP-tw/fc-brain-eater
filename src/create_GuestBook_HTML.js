@@ -1,11 +1,7 @@
 const fs = require("fs");
 
-const generateGuestBookPage = function() {
-  let comments = fs.readFileSync("./data/comments.json", "utf8");
-  comments = comments.slice(0, -1);
-  comments = `[${comments}]`;
-  let commentsObj = JSON.parse(comments);
-  let tbody = createTableBody(commentsObj);
+const generateGuestBookPage = function(commentsList) {
+  let tbody = createTableBody(commentsList);
   let html = `<html>
   <head>
     <link rel="stylesheet" href="/resources/styles/style.css" />
