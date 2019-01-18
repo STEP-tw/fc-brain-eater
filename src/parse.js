@@ -5,6 +5,8 @@ const parse = function(args) {
   args = args.split(ARG_SEPERATOR);
   args.map(function(arg) {
     let [key, value] = arg.split("=");
+    key = unescape(key);
+    value = unescape(value);
     argsObj[key] = value;
   });
   return argsObj;

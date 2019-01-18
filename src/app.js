@@ -23,7 +23,6 @@ class Comments {
     commentsJson = commentsJson.slice(0, -1);
     commentsJson = `[${commentsJson}]`;
     this.commentsList = JSON.parse(commentsJson);
-    console.log(this.commentsList);
   }
   addComment(commentObj) {
     this.commentsList.push(commentObj);

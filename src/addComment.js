@@ -16,6 +16,8 @@ const addComment = function(comments, req, res) {
   });
   req.on("end", function() {
     let { commentsList } = comments;
+    console.log(args);
+
     let commentObj = parse(args);
     commentObj.dataTime = new Date().toDateString();
     commentsList.push(commentObj);
