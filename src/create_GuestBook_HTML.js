@@ -5,7 +5,6 @@ const generateGuestBookPage = function() {
   comments = comments.slice(0, -1);
 
   comments = `[${comments}]`;
-  console.log(comments);
 
   let commentsObj = JSON.parse(comments);
   let tbody = createTableBody(commentsObj);
@@ -19,7 +18,7 @@ const generateGuestBookPage = function() {
       <h1 style="text-align: center"><a href="/index.html"><<</a>Guest Book</h1>
     </header>
     <div class="form">
-    <form method="POST">
+    <form method="POST" enctype="text/plain">
       <legend><h1>Leave a comment</h1></legend>
       <div id="nameInput">
         Name: <input type="text" name="name" id="name" />
