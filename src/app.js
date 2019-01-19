@@ -1,12 +1,16 @@
-const commentAdder = require("./addComment");
+const commentAdder = require("./guest_book/addComment");
 const fileHandler = require("./fileHandler");
 const fs = require("fs");
 const Sheeghra = require("./shegra");
 const send = require("./send");
-const generateGuestBookPage = require("./create_GuestBook_HTML");
+const generateGuestBookPage = require("./guest_book/create_GuestBook_HTML");
 const app = new Sheeghra();
 const commentsFilePath = "./data/comments.json";
-const descriptionPage = require("./create_description_page");
+const {
+  abeliophyllumHandler,
+  ageratumHandler
+} = require("./description/descriptionHandlers");
+const Comments = require("./guest_book/comments");
 
 const logRequestUrl = function(req, res, next) {
   console.log(req.url);
@@ -18,50 +22,8 @@ const guestBookHandler = function(commentsList, req, res) {
   send(res, 200, "");
 };
 
-class Comments {
-  readComments(path, fs) {
-    let commentsJson = fs.readFileSync(path, "utf-8");
-    commentsJson = commentsJson.slice(0, -1);
-    commentsJson = `[${commentsJson}]`;
-    this.commentsList = JSON.parse(commentsJson);
-  }
-  addComment(commentObj) {
-    this.commentsList.push(commentObj);
-  }
-}
-
-const generateDescPageHandler = function(title, contentPath, paths) {
-  return function(req, res) {
-    let content = fs.readFileSync(contentPath, "utf-8");
-    let pageHtml = descriptionPage(title, content, paths);
-
-    send(res, 200, pageHtml);
-  };
-};
-
-const abeliophyllumPaths = {
-  imagePath: "/resources/images/abeliophyllum.jpg",
-  downloadLink: "/resources/books/abeliophyllum.pdf"
-};
-
-const abeliophyllumHandler = generateDescPageHandler(
-  "Abeliophyllum",
-  "./src/contents/abeliophyllum.txt",
-  abeliophyllumPaths
-);
-const ageratumPaths = {
-  imagePath: "/resources/images/ageratum.jpg",
-  downloadLink: "/resources/books/ageratum.pdf"
-};
-
-const ageratumHandler = generateDescPageHandler(
-  "Agerantum",
-  "./src/contents/ageratum.txt",
-  ageratumPaths
-);
-
-let comments = new Comments();
-comments.readComments(commentsFilePath, fs);
+let comments = new Comments(fs, "./data/comments.json");
+comments.readComments();
 
 app.use(logRequestUrl);
 app.get("/abeliophyllum.html", abeliophyllumHandler);
