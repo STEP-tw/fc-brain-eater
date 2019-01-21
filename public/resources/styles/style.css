@@ -31,3 +31,12 @@ th {
 .description {
   margin-top: 200px;
 }
+
+button {
+  font-size: 18px;
+  background-blend-mode: lighten;
+}
+
+#status {
+  color: green;
+}

@@ -4,17 +4,20 @@ class Comments {
     this.dataFilePath = dataFilePath;
   }
 
-  readComments() {
-    let commentsJson = this.fs.readFileSync(this.dataFilePath, "utf-8");
+  load() {
+    let commentsJson = "";
+    try {
+      commentsJson = this.fs.readFileSync(this.dataFilePath, "utf-8");
+    } catch (err) {}
     commentsJson = commentsJson.slice(0, -1);
     commentsJson = `[${commentsJson}]`;
-    this.commentsList = JSON.parse(commentsJson);
+    this.list = JSON.parse(commentsJson);
   }
-  addComment(commentObj, callback) {
-    this.commentsList.push(commentObj);
+  add(commentObj) {
+    this.list.push(commentObj);
     const json = JSON.stringify(commentObj) + ",";
-    this.fs.appendFile(this.dataFilePath, json, () =>
-      callback(this.commentsList)
+    this.fs.appendFile(this.dataFilePath, json, err =>
+      err ? console.log(err) : 0
     );
   }
 }

@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/resources/styles/style.css" />
+    <script src="/scripts/getComments.js"></script>
+    <title>Guest Book</title>
+  </head>
+  <body>
+    <header>
+      <h1 style="text-align: center"><a href="/index.html"><<</a>Guest Book</h1>
+    </header>
+    <div class="form">
+      <form id="commentForm" onsubmit="updateComment(event)">
+        <legend><h1>Leave a comment</h1></legend>
+        <div id="nameInput">
+          Name: <input type="text" name="name" id="name" required />
+        </div>
+        <div id="commentInput">
+          Comment:<textarea
+            rows="4"
+            cols="30"
+            name="comment"
+            required
+          ></textarea>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+      <p hidden id="status"></p>
+      <div id="commentsList">
+        <div>
+          <h1>Comments <button id="refreshBtn">&#x21bb;</button></h1>
+        </div>
+        <div id="commentsTable"></div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,23 +1,22 @@
-const fs = require("fs");
-const { headPart, tailPart } = require("./guest_book_template");
-
-const generateGuestBookPage = function(commentsList) {
-  let commentsTbody = createTableBody(commentsList);
-  let html = headPart + commentsTbody + tailPart;
-  return html;
-};
-
-const createTableBody = function(comments) {
+const generateCommentsTable = function(comments) {
   let rows = comments
     .map(
       comment =>
-        `<tr><td>${comment.dataTime}</td>
+        `<tr><td>${comment.date}</td>
     <td><pre>${comment.name}</pre></td>
     <td><pre>${comment.comment}</pre></td></tr>`
     )
     .reverse()
     .join("");
-  return `<tbody>${rows}</tbody>`;
+  const tableHtml = `<table id="commentsTable">
+    <thead>
+      <th>Date&Time</th>
+      <th>Name</th>
+      <th>Comment</th>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+  return tableHtml;
 };
 
-module.exports = generateGuestBookPage;
+module.exports = generateCommentsTable;
