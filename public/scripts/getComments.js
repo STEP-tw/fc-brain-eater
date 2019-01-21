@@ -2,11 +2,33 @@ const loadComments = function(document) {
   let commentsDiv = document.getElementById("commentsTable");
   fetch("/commentsTable")
     .then(function(res) {
-      return res.text();
+      return res.json();
     })
     .then(function(data) {
-      commentsDiv.innerHTML = data;
+      commentsDiv.innerHTML = createTable(data);
     });
+};
+
+const createTable = function(commentObjs) {
+  let rows = commentObjs
+    .map(commentObj => {
+      const { date, name, comment } = commentObj;
+      const localDate = new Date(date).toLocaleString();
+      return `<tr><td>${localDate}</td>
+    <td><pre>${name}</pre></td>
+    <td><pre>${comment}</pre></td></tr>`;
+    })
+    .reverse()
+    .join("");
+  const tableHtml = `<table id="commentsTable">
+    <thead>
+      <th>Date&Time</th>
+      <th>Name</th>
+      <th>Comment</th>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+  return tableHtml;
 };
 
 const clearForm = function(form) {
@@ -41,8 +63,6 @@ const updateComment = function(event) {
 const initialize = function() {
   loadComments(document);
   const refreshButton = document.getElementById("refreshBtn");
-  // const addCommentBtn = document.getElementById("addCommentBtn");
-  // addCommentBtn.onclick = updateComment.bind(null, document);
   refreshButton.onclick = loadComments.bind(null, document);
 };
 

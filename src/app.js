@@ -21,7 +21,10 @@ let comments = new Comments(fs, commentsFilePath);
 comments.load();
 
 const commentsListHandler = function(req, res) {
-  res.write(generateCommentsTable(comments.list));
+  res.writeHead(200, {
+    "Content-Type": "application/json"
+  });
+  res.write(JSON.stringify(comments.list));
   res.end();
 };
 
