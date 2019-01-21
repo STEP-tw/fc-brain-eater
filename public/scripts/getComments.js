@@ -10,25 +10,17 @@ const loadComments = function(document) {
 };
 
 const createTable = function(commentObjs) {
-  let rows = commentObjs
+  let comments = commentObjs
     .map(commentObj => {
       const { date, name, comment } = commentObj;
       const localDate = new Date(date).toLocaleString();
-      return `<tr><td>${localDate}</td>
-    <td><pre>${name}</pre></td>
-    <td><pre>${comment}</pre></td></tr>`;
+      return `<p>${localDate} 
+    <strong>${name} </strong>
+    ${comment}</p>`;
     })
     .reverse()
     .join("");
-  const tableHtml = `<table id="commentsTable">
-    <thead>
-      <th>Date&Time</th>
-      <th>Name</th>
-      <th>Comment</th>
-    </thead>
-    <tbody>${rows}</tbody>
-  </table>`;
-  return tableHtml;
+  return comments;
 };
 
 const clearForm = function(form) {

@@ -17,17 +17,7 @@ form {
   border-bottom: 1px solid;
   padding: 10px;
 }
-table {
-  border-collapse: collapse;
-}
 
-table,
-tr,
-td,
-th {
-  border: 1px solid black;
-  padding: 8px;
-}
 .description {
   margin-top: 200px;
 }

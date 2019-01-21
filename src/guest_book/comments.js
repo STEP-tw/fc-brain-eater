@@ -8,7 +8,9 @@ class Comments {
     let commentsJson = "";
     try {
       commentsJson = this.fs.readFileSync(this.dataFilePath, "utf-8");
-    } catch (err) {}
+    } catch (err) {
+      if (!this.fs.existsSync("data")) this.fs.mkdirSync("data");
+    }
     commentsJson = commentsJson.slice(0, -1);
     commentsJson = `[${commentsJson}]`;
     this.list = JSON.parse(commentsJson);
