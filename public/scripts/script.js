@@ -1,15 +1,15 @@
 const loadComments = function(document) {
-  let commentsDiv = document.getElementById("commentsTable");
-  fetch("/commentsTable")
+  let commentsDiv = document.getElementById("commentsList");
+  fetch("/commentsList")
     .then(function(res) {
       return res.json();
     })
     .then(function(data) {
-      commentsDiv.innerHTML = createTable(data);
+      commentsDiv.innerHTML = displayComments(data);
     });
 };
 
-const createTable = function(commentObjs) {
+const displayComments = function(commentObjs) {
   let comments = commentObjs
     .map(commentObj => {
       const { date, name, comment } = commentObj;
@@ -23,8 +23,8 @@ const createTable = function(commentObjs) {
   return comments;
 };
 
-const clearForm = function(form) {
-  Object.keys(form).map(key => (form[key].value = ""));
+const clear = function(elements) {
+  elements.map(ele => (ele.value = ""));
 };
 
 const updateStatus = function(document, statusMsg) {
@@ -33,20 +33,18 @@ const updateStatus = function(document, statusMsg) {
   status.innerText = statusMsg;
 };
 
-const updateComment = function(event) {
-  event.preventDefault();
-  const commentForm = document.getElementById("commentForm");
-  let comment = {
-    name: commentForm.name.value,
+const updateComment = function() {
+  const comment = document.getElementsByName("comment")[0];
+  let commentObj = {
     date: new Date().toJSON(),
-    comment: commentForm.comment.value
+    comment: comment.value
   };
   fetch("/addComment", {
     method: "POST",
-    body: JSON.stringify(comment)
+    body: JSON.stringify(commentObj)
   }).then(() => {
     loadComments(document);
-    clearForm(commentForm);
+    clear([name, comment]);
     updateStatus(document, "Thank you for comment");
   });
   return false;

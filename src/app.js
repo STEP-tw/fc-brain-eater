@@ -1,9 +1,8 @@
 const commentAdder = require("./guest_book/addComment");
 const fileHandler = require("./fileHandler");
 const fs = require("fs");
-const Sheeghra = require("./shegra");
 const send = require("./send");
-const generateCommentsTable = require("./guest_book/create_GuestBook_HTML");
+const Sheeghra = require("./shegra");
 const app = new Sheeghra();
 const commentsFilePath = "./data/comments.json";
 const {
@@ -11,12 +10,27 @@ const {
   ageratumHandler
 } = require("./description/descriptionHandlers");
 const Comments = require("./guest_book/comments");
+const { loginHandler, logoutHandler } = require("./userHandlers.js");
 
-const logRequestUrl = function(req, res, next) {
-  console.log(req.url);
-  next();
+const guestBookTemplates = {};
+
+const readGuestBookTemplates = function(fs) {
+  const mainPath = "./src/guestBookTemplate.html";
+  const loginFormPath = "./src/loginFormTemplate.html";
+  const commentsFormPath = "./src/commentsFormTemplate.html";
+  guestBookTemplates.main = fs.readFileSync(mainPath, "utf8");
+  guestBookTemplates.loginForm = fs.readFileSync(loginFormPath, "utf8");
+  guestBookTemplates.commentsForm = fs.readFileSync(commentsFormPath, "utf8");
 };
 
+const logRequest = (req, res, next) => {
+  console.log(req.method, req.url);
+  console.log("headers =>", JSON.stringify(req.headers, null, 2));
+  console.log("body =>", req.body);
+  console.log(req.cookies);
+
+  next();
+};
 let comments = new Comments(fs, commentsFilePath);
 comments.load();
 
@@ -34,14 +48,48 @@ const getPostedData = function(req, res, next) {
     data = data + chunk;
   });
   req.on("end", function() {
-    req.data = data;
+    req.body = data;
     next();
   });
 };
 
-app.use(logRequestUrl);
+const readCookies = function(req, res, next) {
+  const cookie = req.headers["cookie"];
+  let cookies = {};
+  if (cookie) {
+    cookie.split(";").forEach(element => {
+      let [name, value] = element.split("=");
+      name = name.trim();
+      cookies[name] = value;
+    });
+  }
+  req.cookies = cookies;
+
+  next();
+};
+
+readGuestBookTemplates(fs);
+
+const guestBookHandler = function(req, res) {
+  let { main, loginForm, commentsForm } = guestBookTemplates;
+  const { cookies } = req;
+  let form = loginForm;
+  if (cookies.userName) {
+    form = commentsForm;
+    form = form.replace("__userName__", cookies.userName);
+  }
+  main = main.replace("__form__", form);
+  send(res, 200, main);
+};
+
 app.use(getPostedData);
-app.get("/commentsTable", commentsListHandler);
+app.use(readCookies);
+app.use(logRequest);
+
+app.post("/login", loginHandler);
+app.post("/logout", logoutHandler);
+app.get("/guest_book.html", guestBookHandler);
+app.get("/commentsList", commentsListHandler);
 app.post("/addComment", commentAdder.bind(null, comments));
 app.get("/abeliophyllum.html", abeliophyllumHandler);
 app.get("/ageratum.html", ageratumHandler);
