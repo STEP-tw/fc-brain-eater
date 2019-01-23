@@ -12,6 +12,8 @@ const {
 const Comments = require("./guest_book/comments");
 const { loginHandler, logoutHandler } = require("./userHandlers.js");
 
+const guestBookTemplates = {}; // Global variable :*(
+
 const readGuestBookTemplates = function(fs) {
   const mainPath = "./src/guestBookTemplate.html";
   const loginFormPath = "./src/loginFormTemplate.html";
@@ -76,12 +78,21 @@ const guestBookHandler = function(req, res) {
   send(res, 200, main);
 };
 
-// Global variable :*(
-const guestBookTemplates = {};
-let comments = new Comments(fs, commentsFilePath);
+const loadComments = function(fs, dataFilePath) {
+  let commentsJson = "";
+  try {
+    commentsJson = fs.readFileSync(dataFilePath, "utf-8");
+  } catch (err) {
+    if (!fs.existsSync("data")) fs.mkdirSync("data");
+  }
+  commentsJson = commentsJson.slice(0, -1);
+  commentsJson = `[${commentsJson}]`;
+  return JSON.parse(commentsJson);
+};
 
-comments.load();
+const commentsList = loadComments(fs, commentsFilePath);
 readGuestBookTemplates(fs);
+let comments = new Comments(commentsList); // Global variable :*(
 
 app.use(getPostedData);
 app.use(readCookies);
@@ -91,7 +102,7 @@ app.post("/login", loginHandler);
 app.post("/logout", logoutHandler);
 app.get("/guest_book.html", guestBookHandler);
 app.get("/commentsList", commentsListHandler);
-app.post("/addComment", commentAdder.bind(null, comments));
+app.post("/addComment", commentAdder.bind(null, comments, commentsFilePath));
 app.get("/abeliophyllum.html", abeliophyllumHandler);
 app.get("/ageratum.html", ageratumHandler);
 app.use(fileHandler);
