@@ -12,8 +12,6 @@ const {
 const Comments = require("./guest_book/comments");
 const { loginHandler, logoutHandler } = require("./userHandlers.js");
 
-const guestBookTemplates = {};
-
 const readGuestBookTemplates = function(fs) {
   const mainPath = "./src/guestBookTemplate.html";
   const loginFormPath = "./src/loginFormTemplate.html";
@@ -31,8 +29,6 @@ const logRequest = (req, res, next) => {
 
   next();
 };
-let comments = new Comments(fs, commentsFilePath);
-comments.load();
 
 const commentsListHandler = function(req, res) {
   res.writeHead(200, {
@@ -68,8 +64,6 @@ const readCookies = function(req, res, next) {
   next();
 };
 
-readGuestBookTemplates(fs);
-
 const guestBookHandler = function(req, res) {
   let { main, loginForm, commentsForm } = guestBookTemplates;
   const { cookies } = req;
@@ -81,6 +75,13 @@ const guestBookHandler = function(req, res) {
   main = main.replace("__form__", form);
   send(res, 200, main);
 };
+
+// Global variable :*(
+const guestBookTemplates = {};
+let comments = new Comments(fs, commentsFilePath);
+
+comments.load();
+readGuestBookTemplates(fs);
 
 app.use(getPostedData);
 app.use(readCookies);
